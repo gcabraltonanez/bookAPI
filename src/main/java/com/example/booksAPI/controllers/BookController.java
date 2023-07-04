@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.booksAPI.services.BookServiceImpl;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/books")
 public class BookController {
 
@@ -58,6 +59,10 @@ public class BookController {
     public ResponseEntity<Object> updateBook(@Valid @RequestBody Book book, Errors errors) {
 
         try {
+            /*
+            primero se chequea que no exista otro libro con el título que queremos modificar,
+            si es así, se devuelve un mensaje con el error correspondiente.
+            */
             Optional <Book> existTitle = this.bookService.findBookByTitle(book.getTitle());
             Optional <Book> existId = this.bookService.findBookById(book.getId());
             existTitle.ifPresent(value -> System.out.println(value.getTitle()));
@@ -65,7 +70,7 @@ public class BookController {
                 return new ResponseEntity<>
                         (BuildResponse.buildHTTPResponse
                                 (200, "Existe libro con el título " + book.getTitle()),
-                                HttpStatus.OK);
+                                HttpStatus.BAD_REQUEST);
             }
             Book updatedBook = this.bookService.updateBook(book);
             if (updatedBook.getId() != null){
@@ -98,8 +103,12 @@ public class BookController {
     public ResponseEntity<?> findBookByTitle(@RequestParam(required = false) String title) {
 
         Optional<Book> foundBook = bookService.findBookByTitle(title);
-        Map<String, Object> response = new HashMap<>();
 
+        /*
+        búsqueda de un libro segun su título, si el request param se ingresa vacío, se envía
+        un mensaje con el error correspondiente. Si no se encuentra ningún libro con dicho título,
+        también.
+        */
         if (title == null || title.isBlank()) {
 
             return new ResponseEntity<>(BuildResponse.buildHTTPResponse
@@ -133,7 +142,6 @@ public class BookController {
         Book book = this.bookService.deleteBook(id);
 
         if (book.getId() != null) {
-
             return new ResponseEntity<>
                     (BuildResponse.buildHTTPResponse
                             (200, "Se eliminó el libro con id " + id),
@@ -151,12 +159,21 @@ public class BookController {
     
     @DeleteMapping("/deleteAll")
     public ResponseEntity<?> deleteAllBooks() {
-        this.bookService.deleteAllBooks();
 
-        return new ResponseEntity<>
+        int booksSize = this.bookService.getAllBooks().size();
+
+        //antes de borrar todos los libros se chequea que la base tenga cargado al menos uno
+        if (booksSize > 0){
+            this.bookService.deleteAllBooks();
+            return new ResponseEntity<>
+                    (BuildResponse.buildHTTPResponse
+                            (200, "Todos los libros fueron eliminados"),
+                            HttpStatus.OK);
+        }
+
+        else return  new ResponseEntity<>
                 (BuildResponse.buildHTTPResponse
-                        (200, "Todos los libros fueron eliminados"),
-                        HttpStatus.OK);
+                        (400, "Lista de libros vacía"),
+                        HttpStatus.BAD_REQUEST);
     }
-
 }

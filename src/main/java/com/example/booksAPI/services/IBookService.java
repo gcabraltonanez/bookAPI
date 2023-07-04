@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.example.booksAPI.models.Book;
 
 public interface IBookService {
-
     public ArrayList<Book> getAllBooks();
     public Book createBook(Book book);
     public Book updateBook(Book book);
