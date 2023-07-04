@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class BuildResponse {
 
-    public static Map<String, Object> buildHTTPResponse(String key, Object value, String message){
+    public static Map<String, Object> buildHTTPResponse(Integer status, String message){
         Map<String, Object> response = new HashMap<>();
-        response.put(key, value);
+        response.put("status", status);
         response.put("message", message);
         return response;
     }

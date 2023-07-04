@@ -25,8 +25,8 @@ public class BookController {
     @GetMapping("/all")
     public Object getBooks() {
         return bookService.getAllBooks().size() > 0 ? bookService.getAllBooks() : new ResponseEntity<> (BuildResponse.buildHTTPResponse
-                ("error", true, "No hay libros cargados"),
-        HttpStatus.BAD_REQUEST);
+                (404, "No hay libros cargados"),
+        HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/create")
@@ -40,7 +40,7 @@ public class BookController {
             }
             return new ResponseEntity<>
                     (BuildResponse.buildHTTPResponse
-                            ("error", true, "Ya existe un libro con el título "+ book.getTitle()),
+                            (400, "Ya existe un libro con el título "+ book.getTitle()),
                             HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
 
@@ -64,7 +64,7 @@ public class BookController {
             if(existTitle.isPresent() && existId.isPresent()){
                 return new ResponseEntity<>
                         (BuildResponse.buildHTTPResponse
-                                ("error", true, "Existe libro con el título " + book.getTitle()),
+                                (200, "Existe libro con el título " + book.getTitle()),
                                 HttpStatus.OK);
             }
             Book updatedBook = this.bookService.updateBook(book);
@@ -72,14 +72,14 @@ public class BookController {
                 this.bookService.createBook(book);
                     return new ResponseEntity<>
                             (BuildResponse.buildHTTPResponse
-                                    ("data", book, "Se modifico el libro con id " + book.getId()),
+                                    (200, "Se modifico el libro con id " + book.getId()),
                                     HttpStatus.OK);
                 }
 
             else {
                 return new ResponseEntity<>
                         (BuildResponse.buildHTTPResponse
-                                ("error", true, "No existe libro con id " + book.getId()),
+                                (404, "No existe libro con id " + book.getId()),
                                 HttpStatus.NOT_FOUND);
             }
 
@@ -103,14 +103,14 @@ public class BookController {
         if (title == null || title.isBlank()) {
 
             return new ResponseEntity<>(BuildResponse.buildHTTPResponse
-                    ("error",true, "El título a buscar no puede estar vacío"),
+                    (400, "El título a buscar no puede estar vacío"),
                     HttpStatus.BAD_REQUEST);
 
         }
 
         if (foundBook.isEmpty()) {
             return new ResponseEntity<>(BuildResponse.buildHTTPResponse
-                    ("error",true, "El título especificado no existe"),
+                    (404, "El título especificado no existe"),
                     HttpStatus.NOT_FOUND);
         }
 
@@ -124,7 +124,7 @@ public class BookController {
 
         return optionalBook.isPresent() ? new ResponseEntity<>(optionalBook, HttpStatus.OK)
                 : new ResponseEntity<> (BuildResponse.buildHTTPResponse
-                        ("error", true, "No existe libro con id "+ id),
+                        (404, "No existe libro con id "+ id),
                         HttpStatus.NOT_FOUND);
     }
 
@@ -136,14 +136,14 @@ public class BookController {
 
             return new ResponseEntity<>
                     (BuildResponse.buildHTTPResponse
-                            ("data", book, "Se eliminó el libro con id " + id),
+                            (200, "Se eliminó el libro con id " + id),
                             HttpStatus.OK);
         }
 
         else {
             return new ResponseEntity<>
                     (BuildResponse.buildHTTPResponse
-                            ("error", true, book.getTitle()),
+                            (404, book.getTitle()),
                             HttpStatus.NOT_FOUND);
         }
 
@@ -155,7 +155,7 @@ public class BookController {
 
         return new ResponseEntity<>
                 (BuildResponse.buildHTTPResponse
-                        ("info", null, "Todos los libros fueron eliminados"),
+                        (200, "Todos los libros fueron eliminados"),
                         HttpStatus.OK);
     }
 
