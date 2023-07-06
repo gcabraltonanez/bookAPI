@@ -66,7 +66,7 @@ public class BookController {
             Optional <Book> existTitle = this.bookService.findBookByTitle(book.getTitle());
             Optional <Book> existId = this.bookService.findBookById(book.getId());
             existTitle.ifPresent(value -> System.out.println(value.getTitle()));
-            if(existTitle.isPresent() && existId.isPresent()){
+            if(existTitle.isPresent() && (existId.isPresent() && !Objects.equals(existId.get().getId(), book.getId()))){
                 return new ResponseEntity<>
                         (BuildResponse.buildHTTPResponse
                                 (200, "Existe libro con el título " + book.getTitle()),
