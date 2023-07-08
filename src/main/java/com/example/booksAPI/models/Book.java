@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Entity
@@ -27,6 +28,7 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
+    @NotNull(message = BooksDataValidator.PRICE_EMPTY)
     @Positive(message = BooksDataValidator.PRICE)
     @Column(nullable = false)
     private Integer price;

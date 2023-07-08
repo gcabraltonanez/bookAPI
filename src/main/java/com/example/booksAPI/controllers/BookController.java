@@ -34,10 +34,17 @@ public class BookController {
     public ResponseEntity<Object> createBook(@Valid @RequestBody Book book, Errors errors) {
 
         try {
+            String nameRegex = "^[a-zA-Z\\-_ ’'‘ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ]+$";
             Optional<Book> optionalBook = bookService.findBookByTitle(book.getTitle());
 
             if(optionalBook.isEmpty()){
-                return new ResponseEntity<>(this.bookService.createBook(book), HttpStatus.CREATED);
+                if(book.getAuthor().matches(nameRegex)){
+                    return new ResponseEntity<>(this.bookService.createBook(book), HttpStatus.CREATED);
+                }
+                else return new ResponseEntity<>
+                        (BuildResponse.buildHTTPResponse
+                                (406, "Ingrese un nombre válido"),
+                                HttpStatus.NOT_ACCEPTABLE);
             }
             return new ResponseEntity<>
                     (BuildResponse.buildHTTPResponse

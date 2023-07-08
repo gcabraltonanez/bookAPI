@@ -16,13 +16,14 @@
 -   **Git** para el versionado
 -   **Postman** para probar los endpoints
 <br>
-# Como probar el proyecto en su equipo
+## Como probar el proyecto en su equipo
 <br>
-Es recomendable contar con el IDE **Intellij IDEA Community Edition** 2023.1.23 para abrir el proyecto, sin embargo puede utilizar el de su preferencia (**VSC, Netbeans**.
 
-Es ideal también que tenga conocimiento sobre las líneas del archivo **application.properties**, ya que ahí es donde se realiza la conexión a la base de datos.
+-   Es recomendable contar con el IDE **Intellij IDEA Community Edition** 2023.1.23 para abrir el proyecto, sin embargo puede utilizar el de su preferencia (**VSC**, **Netbeans**).
 
-Es deseable que ya tenga todo el entorno para desarrollar en JAVA configurado.
+-   Es ideal también que tenga conocimiento sobre las líneas del archivo **application.properties**, ya que ahí es donde se realiza la conexión a la base de datos.
+
+-   Es deseable que ya tenga todo el entorno para desarrollar en JAVA configurado.
 <br>
 ## Pasos a seguir
 <br>
