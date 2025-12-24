@@ -1,45 +1,58 @@
-**El ejercicio consistió en crear una API utilizando el proyecto de Spring, Spring-Boot, del lenguaje Java.**
+Books API – Spring Boot 3 / Java 21
+====================================
 
-**La API esta basada en contener Libros con sus respectivos datos (Título, Autor, Precio, Fecha de lanzamiento). Es un CRUD, con el cual podremos crear, leer, modificar y eliminar libros.**
+API REST para gestionar libros (CRUD) con Spring Boot 3.2, Java 21 y base en memoria H2.
 
-# Información del proyecto
+Stack y características
+-----------------------
+- Java 21
+- Spring Boot 3.2.5 (Web, Data JPA, Validation)
+- H2 en memoria (con consola habilitada en dev)
+- Lombok para reducir boilerplate
+- Maven para build y dependencias
 
-## Se utilizaron las siguientes herramientas
+Modelo
+------
+- `Book`: `id`, `title`, `author`, `price` (`BigDecimal`), `releaseDate` (`LocalDate dd-MM-yyyy`)
+- Validaciones: título/autores obligatorios, autor con letras/espacios/apóstrofes/guiones, precio >= 0.01, fecha obligatoria.
 
--   Lenguaje **Java** para el desarrollo
--   **Spring-Boot Data JPA** como ORM para la persistencia
--   **Maven** para gestión de dependencias del proyecto y configuración del mismo
--   Base de datos en memoria **H2**
--   **H2 Console** en el navegador para la administración de la base de datos
--   Librería **Lombok** para reducir porciones de código
--   IDE **Intellij IDEA Community Edition** 2023.1.23
--   **Git** para el versionado
--   **Postman** para probar los endpoints
-<br>
-## Como probar el proyecto en su equipo
-<br>
+Endpoints principales
+---------------------
+- `GET /books/all` – Lista todos los libros.
+- `POST /books/create` – Crea un libro.
+- `PUT /books/update` – Actualiza un libro existente por `id`.
+- `GET /books/find?title=...` – Busca por título.
+- `GET /books/findOne/{id}` – Busca por id.
+- `DELETE /books/delete/{bookId}` – Elimina por id.
+- `DELETE /books/deleteAll` – Borra todos (si la lista no está vacía).
 
--   Es recomendable contar con el IDE **Intellij IDEA Community Edition** 2023.1.23 para abrir el proyecto, sin embargo puede utilizar el de su preferencia (**VSC**, **Netbeans**).
+Manejo de errores
+-----------------
+- Validaciones retornan 400 con detalles por campo.
+- No encontrado retorna 404 con mensaje claro.
+- Título duplicado retorna 409.
+- Respuestas de mensaje usan DTO `ApiMessage`; errores usan `ApiError`.
 
--   Es ideal también que tenga conocimiento sobre las líneas del archivo **application.properties**, ya que ahí es donde se realiza la conexión a la base de datos.
+Cómo ejecutar
+-------------
+1) Requisitos: JDK 21, Maven (o el wrapper `mvnw` incluido).
+2) Instalar dependencias y correr:
+```
+./mvnw spring-boot:run
+```
+3) Consola H2 (dev): `http://localhost:8080/h2-console`
+   - JDBC URL: `jdbc:h2:mem:librosdb`
+   - Usuario/clave: definidos en `src/main/resources/application.properties`
 
--   Es deseable que ya tenga todo el entorno para desarrollar en JAVA configurado.
-<br>
-## Pasos a seguir
-<br>
+Pruebas
+-------
+- Ejecutar suite:
+```
+./mvnw test
+```
+- Incluye prueba básica de repositorio (`BookRepositoryTest`) para guardar y buscar por título.
 
--   Descargar el proyecto en su equipo
--   Si está utilizando **Intellij IDEA**, vaya hasta el archivo BooksAPIApplication.java, haga click derecho -> run BooksAPIApplication main()
--   Si el paso anterior no funciona abrir una terminal en la carpeta del proyecto y escriba el siguiente comando:
-    
-`mvn.cmd spring-boot:run`
-
--   Si no está utilizando ningún IDE o Editor de Texto, sitúese en la carpeta del proyecto, abra una terminal y escriba el siguiente comando:
-
-`mvn.cmd spring-boot:run`
-
--   Una vez hecho eso, ya podrá manipular la base de datos en memoria a través del H2 Console: http://localhost:8080/h2-console/ 
-Ingresando con el usuario y contraseña especificadas en el archivo **application.properties** del proyecto
-
-
--   Para probar los endpoints con los distintos métodos HTTP, puede utilizar **Postman**
+Notas
+-----
+- Endpoints devuelven entidades directamente; si quieres DTOs de salida, se pueden agregar fácilmente.
+- Configuración sensible (credenciales) debe gestionarse por perfiles; la consola H2 está pensada solo para desarrollo.

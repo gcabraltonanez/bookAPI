@@ -1,17 +1,22 @@
 package com.example.booksAPI.services;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 import com.example.booksAPI.models.Book;
 
 public interface IBookService {
-    public ArrayList<Book> getAllBooks();
-    public Book createBook(Book book);
-    public Book updateBook(Book book);
-    public Optional<Book> findBookByTitle(String title);
-    public Optional<Book> findBookById(Long id);
-    public Book deleteBook(Long id);
-    public void deleteAllBooks();
+    List<Book> getAllBooks();
+
+    Book createBook(Book book);
+
+    Book updateBook(Book book);
+
+    Book getBookByTitle(String title);
+
+    Book getBookById(Long id);
+
+    void deleteBook(Long id);
+
+    void deleteAllBooks();
     
 }
